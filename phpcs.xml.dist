@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="ai-costs">
+    <description>Local PHPCS rules for ai-costs.</description>
+
+    <file>src</file>
+    <file>tests</file>
+    <file>resources</file>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+
+    <arg name="colors" />
+    <arg name="extensions" value="php" />
+
+    <rule ref="PSR12" />
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120" />
+            <property name="absoluteLineLimit" value="0" />
+        </properties>
+    </rule>
+</ruleset>

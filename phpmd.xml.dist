@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="ai-costs">
+    <description>Local PHPMD rules for ai-costs.</description>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+
+    <rule ref="rulesets/cleancode.xml">
+        <exclude name="BooleanArgumentFlag" />
+        <exclude name="StaticAccess" />
+    </rule>
+    <rule ref="rulesets/codesize.xml" />
+    <rule ref="rulesets/design.xml" />
+    <rule ref="rulesets/naming.xml">
+        <exclude name="LongVariable" />
+    </rule>
+    <rule ref="rulesets/unusedcode.xml" />
+</ruleset>

@@ -1,0 +1,49 @@
+{
+    "name": "1manfactory/ai-costs",
+    "description": "Unofficial PHP library for calculating OpenAI API costs from usage payloads.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "phpmd/phpmd": "^2.15",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.5",
+        "squizlabs/php_codesniffer": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AiCosts\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AiCosts\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "lint:syntax": "@php tools/lint-syntax.php",
+        "lint:phpstan": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --debug",
+        "lint:phpmd": "phpmd src,tests,resources text phpmd.xml.dist --suffixes php",
+        "lint:phpcs": "phpcs --standard=phpcs.xml.dist",
+        "lint:all": [
+            "@lint:syntax",
+            "@lint:phpstan",
+            "@lint:phpmd",
+            "@lint:phpcs"
+        ],
+        "test": "phpunit --colors=always"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "keywords": [
+        "ai",
+        "billing",
+        "costs",
+        "llm",
+        "tokens",
+        "usage"
+    ]
+}
