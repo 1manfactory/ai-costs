@@ -1,0 +1,52 @@
+name: Release Tag
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create next patch tag
+        run: |
+          latest_tag="$(git tag --list 'v*' --sort=-version:refname | head -n 1)"
+
+          if [ -z "${latest_tag}" ]; then
+            next_tag="v0.1.0"
+          else
+            version="${latest_tag#v}"
+            old_ifs="${IFS}"
+            IFS='.'
+            set -- ${version}
+            IFS="${old_ifs}"
+            major="${1:-}"
+            minor="${2:-}"
+            patch="${3:-}"
+
+            if [ -z "${major}" ] || [ -z "${minor}" ] || [ -z "${patch}" ]; then
+              echo "Latest tag '${latest_tag}' is not semver-like (expected vMAJOR.MINOR.PATCH)."
+              exit 1
+            fi
+
+            next_patch=$((patch + 1))
+            next_tag="v${major}.${minor}.${next_patch}"
+          fi
+
+          git tag "${next_tag}"
+          git push origin "${next_tag}"

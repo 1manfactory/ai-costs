@@ -33,7 +33,7 @@ final class StaticPriceProvider implements PriceProviderInterface
     public static function default(): self
     {
         /** @var array<string, mixed> $catalog */
-        $catalog = require dirname(__DIR__, 2) . '/resources/pricing/openai.php';
+        $catalog = require dirname(__DIR__, 2) . '/resources/pricing/catalog.php';
 
         return new self($catalog);
     }

@@ -6,6 +6,9 @@ namespace AiCosts\Value;
 
 use InvalidArgumentException;
 
+/**
+ * @SuppressWarnings("PHPMD.ExcessiveParameterList")
+ */
 final readonly class UsageBreakdown
 {
     public function __construct(
@@ -18,6 +21,8 @@ final readonly class UsageBreakdown
         public int $outputAudioTokens = 0,
         public ?string $serviceTier = null,
         public string $source = 'manual',
+        public int $cacheWrite5mInputTokens = 0,
+        public int $cacheWrite1hInputTokens = 0,
     ) {
         foreach (
             [
@@ -27,6 +32,8 @@ final readonly class UsageBreakdown
                 'reasoningTokens' => $this->reasoningTokens,
                 'inputAudioTokens' => $this->inputAudioTokens,
                 'outputAudioTokens' => $this->outputAudioTokens,
+                'cacheWrite5mInputTokens' => $this->cacheWrite5mInputTokens,
+                'cacheWrite1hInputTokens' => $this->cacheWrite1hInputTokens,
             ] as $name => $value
         ) {
             if ($value < 0) {
@@ -34,8 +41,13 @@ final readonly class UsageBreakdown
             }
         }
 
-        if ($this->cachedInputTokens > $this->inputTokens) {
-            throw new InvalidArgumentException('cachedInputTokens cannot be greater than inputTokens.');
+        if (
+            $this->cachedInputTokens + $this->cacheWrite5mInputTokens + $this->cacheWrite1hInputTokens
+            > $this->inputTokens
+        ) {
+            throw new InvalidArgumentException(
+                'The sum of cached and cache-write input tokens cannot be greater than inputTokens.',
+            );
         }
 
         if ($this->reasoningTokens > $this->outputTokens) {
@@ -45,6 +57,9 @@ final readonly class UsageBreakdown
 
     public function uncachedInputTokens(): int
     {
-        return $this->inputTokens - $this->cachedInputTokens;
+        return $this->inputTokens
+            - $this->cachedInputTokens
+            - $this->cacheWrite5mInputTokens
+            - $this->cacheWrite1hInputTokens;
     }
 }

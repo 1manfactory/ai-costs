@@ -37,12 +37,37 @@ final readonly class CostCalculator
             $usage->cachedInputTokens,
         );
 
+        $cacheWrite5mInputRate = $priceCard->cacheWrite5mInputRateInUsdMicrosPerMillionTokensFor($usage);
+        $cacheWrite1hInputRate = $priceCard->cacheWrite1hInputRateInUsdMicrosPerMillionTokensFor($usage);
+
+        if ($usage->cacheWrite5mInputTokens > 0 && $cacheWrite5mInputRate === null) {
+            throw new UnsupportedUsageScenario('5-minute cache-write pricing is not configured for this model.');
+        }
+
+        if ($usage->cacheWrite1hInputTokens > 0 && $cacheWrite1hInputRate === null) {
+            throw new UnsupportedUsageScenario('1-hour cache-write pricing is not configured for this model.');
+        }
+
+        $cacheWrite5mInputCostInUsdMicros = UsdMicros::calculateAmount(
+            $cacheWrite5mInputRate ?? 0,
+            $usage->cacheWrite5mInputTokens,
+        );
+
+        $cacheWrite1hInputCostInUsdMicros = UsdMicros::calculateAmount(
+            $cacheWrite1hInputRate ?? 0,
+            $usage->cacheWrite1hInputTokens,
+        );
+
         $outputCostInUsdMicros = UsdMicros::calculateAmount(
             $priceCard->outputRateInUsdMicrosPerMillionTokensFor($usage),
             $usage->outputTokens,
         );
 
-        $totalCostInUsdMicros = $inputCostInUsdMicros + $cachedInputCostInUsdMicros + $outputCostInUsdMicros;
+        $totalCostInUsdMicros = $inputCostInUsdMicros
+            + $cachedInputCostInUsdMicros
+            + $cacheWrite5mInputCostInUsdMicros
+            + $cacheWrite1hInputCostInUsdMicros
+            + $outputCostInUsdMicros;
 
         foreach ($context->additionalCharges as $charge) {
             $totalCostInUsdMicros += $charge->amountInUsdMicros;
@@ -57,6 +82,8 @@ final readonly class CostCalculator
             outputCostInUsdMicros: $outputCostInUsdMicros,
             additionalCharges: $context->additionalCharges,
             totalCostInUsdMicros: $totalCostInUsdMicros,
+            cacheWrite5mInputCostInUsdMicros: $cacheWrite5mInputCostInUsdMicros,
+            cacheWrite1hInputCostInUsdMicros: $cacheWrite1hInputCostInUsdMicros,
         );
     }
 }

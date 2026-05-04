@@ -1,8 +1,8 @@
 {
     "name": "1manfactory/ai-costs",
-    "description": "Unofficial PHP library for calculating OpenAI API costs from usage payloads.",
+    "description": "Unofficial PHP library for calculating LLM API costs from usage payloads.",
     "type": "library",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": "^8.2"
     },
@@ -40,9 +40,13 @@
     },
     "keywords": [
         "ai",
+        "anthropic",
         "billing",
+        "claude",
         "costs",
+        "gemini",
         "llm",
+        "openai",
         "tokens",
         "usage"
     ]
