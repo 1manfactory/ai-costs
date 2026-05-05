@@ -114,4 +114,22 @@ final class CostCalculatorTest extends TestCase
         self::assertSame(15000, $breakdown->outputCostInUsdMicros);
         self::assertSame(527500, $breakdown->totalCostInUsdMicros);
     }
+
+    public function testItCalculatesCostsForNewlyAddedOpenAiLegacyModels(): void
+    {
+        $usage = new UsageBreakdown(
+            model: 'gpt-4.1-2025-04-14',
+            inputTokens: 2000,
+            cachedInputTokens: 500,
+            outputTokens: 250,
+        );
+
+        $calculator = new CostCalculator(StaticPriceProvider::default());
+        $breakdown = $calculator->calculate($usage);
+
+        self::assertSame(3000, $breakdown->inputCostInUsdMicros);
+        self::assertSame(250, $breakdown->cachedInputCostInUsdMicros);
+        self::assertSame(2000, $breakdown->outputCostInUsdMicros);
+        self::assertSame(5250, $breakdown->totalCostInUsdMicros);
+    }
 }
