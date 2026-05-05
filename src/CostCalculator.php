@@ -77,6 +77,7 @@ final readonly class CostCalculator
             usage: $usage,
             context: $context,
             priceCard: $priceCard,
+            pricingAsOf: $this->priceProvider->asOf(),
             inputCostInUsdMicros: $inputCostInUsdMicros,
             cachedInputCostInUsdMicros: $cachedInputCostInUsdMicros,
             outputCostInUsdMicros: $outputCostInUsdMicros,
