@@ -176,6 +176,53 @@ return [
                 ],
             ],
         ],
+        'gpt-5' => [
+            'aliases' => [
+                'gpt-5-2025-08-07',
+            ],
+            'cards' => [
+                'standard' => [
+                    'input_usd_micros_per_million_tokens' => 1_250_000,
+                    'cached_input_usd_micros_per_million_tokens' => 125_000,
+                    'output_usd_micros_per_million_tokens' => 10_000_000,
+                ],
+            ],
+        ],
+        'gpt-5-mini' => [
+            'aliases' => [
+                'gpt-5-mini-2025-08-07',
+            ],
+            'cards' => [
+                'standard' => [
+                    'input_usd_micros_per_million_tokens' => 250_000,
+                    'cached_input_usd_micros_per_million_tokens' => 25_000,
+                    'output_usd_micros_per_million_tokens' => 2_000_000,
+                ],
+            ],
+        ],
+        'gpt-5-nano' => [
+            'aliases' => [
+                'gpt-5-nano-2025-08-07',
+            ],
+            'cards' => [
+                'standard' => [
+                    'input_usd_micros_per_million_tokens' => 50_000,
+                    'cached_input_usd_micros_per_million_tokens' => 5_000,
+                    'output_usd_micros_per_million_tokens' => 400_000,
+                ],
+            ],
+        ],
+        'gpt-5-pro' => [
+            'aliases' => [
+                'gpt-5-pro-2025-10-06',
+            ],
+            'cards' => [
+                'standard' => [
+                    'input_usd_micros_per_million_tokens' => 15_000_000,
+                    'output_usd_micros_per_million_tokens' => 120_000_000,
+                ],
+            ],
+        ],
         'gpt-4.1' => [
             'aliases' => [
                 'gpt-4.1-2025-04-14',
