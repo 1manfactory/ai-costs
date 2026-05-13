@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'as_of' => '2026-05-05',
+    'as_of' => '2026-05-13',
     'source' => 'https://developers.openai.com/api/docs/pricing',
     'models' => [
         'gpt-5.5' => [

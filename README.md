@@ -130,7 +130,7 @@ After the repository is submitted once on Packagist, each new Git tag becomes a 
 
 ## Pricing sources
 
-The bundled pricing catalog is based on official provider docs as of `2026-05-02`.
+The bundled pricing catalog is based on official provider docs as of `2026-05-13`.
 
 - OpenAI pricing overview: <https://developers.openai.com/api/docs/pricing>
 - OpenAI GPT-5.4 model page: <https://developers.openai.com/api/docs/models/gpt-5.4/>
