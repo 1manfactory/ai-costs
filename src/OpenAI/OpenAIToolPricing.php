@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AiCosts\OpenAI;
 
 use AiCosts\Exception\InvalidUsagePayload;
-use AiCosts\Support\UsdMicros;
+use AiCosts\Support\UsdMicrocent;
 use AiCosts\Value\AdditionalCharge;
 
 final class OpenAIToolPricing
@@ -18,7 +18,7 @@ final class OpenAIToolPricing
 
         return new AdditionalCharge(
             label: sprintf('OpenAI web search (%d calls)', $calls),
-            amountInUsdMicros: UsdMicros::calculateAmount(10_000_000, $calls, 1000),
+            amountInUsdMicrocent: UsdMicrocent::calculateAmount(1_000_000, $calls, 1000),
         );
     }
 
@@ -32,7 +32,11 @@ final class OpenAIToolPricing
 
         return new AdditionalCharge(
             label: $label,
-            amountInUsdMicros: UsdMicros::calculateAmount($nonReasoningModel ? 25_000_000 : 10_000_000, $calls, 1000),
+            amountInUsdMicrocent: UsdMicrocent::calculateAmount(
+                $nonReasoningModel ? 2_500_000 : 1_000_000,
+                $calls,
+                1000,
+            ),
         );
     }
 
@@ -42,17 +46,17 @@ final class OpenAIToolPricing
 
         return new AdditionalCharge(
             label: sprintf('OpenAI file search (%d calls)', $calls),
-            amountInUsdMicros: UsdMicros::calculateAmount(2_500_000, $calls, 1000),
+            amountInUsdMicrocent: UsdMicrocent::calculateAmount(250_000, $calls, 1000),
         );
     }
 
     public static function containerSession(int $memoryGb): AdditionalCharge
     {
         $priceMap = [
-            1 => 30_000,
-            4 => 120_000,
-            16 => 480_000,
-            64 => 1_920_000,
+            1 => 3_000,
+            4 => 12_000,
+            16 => 48_000,
+            64 => 192_000,
         ];
 
         if (!isset($priceMap[$memoryGb])) {
@@ -61,7 +65,7 @@ final class OpenAIToolPricing
 
         return new AdditionalCharge(
             label: sprintf('OpenAI container session (%d GB / 20 min)', $memoryGb),
-            amountInUsdMicros: $priceMap[$memoryGb],
+            amountInUsdMicrocent: $priceMap[$memoryGb],
         );
     }
 

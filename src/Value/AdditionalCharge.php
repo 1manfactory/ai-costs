@@ -8,7 +8,7 @@ final readonly class AdditionalCharge
 {
     public function __construct(
         public string $label,
-        public int $amountInUsdMicros,
+        public int $amountInUsdMicrocent,
     ) {
     }
 }

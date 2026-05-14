@@ -15,17 +15,17 @@ final readonly class PriceCard
     public function __construct(
         public string $model,
         public BillingMode $billingMode,
-        public int $inputRateInUsdMicrosPerMillionTokens,
-        public ?int $cachedInputRateInUsdMicrosPerMillionTokens,
-        public int $outputRateInUsdMicrosPerMillionTokens,
+        public int $inputRateInUsdMicrocentPerMillionTokens,
+        public ?int $cachedInputRateInUsdMicrocentPerMillionTokens,
+        public int $outputRateInUsdMicrocentPerMillionTokens,
         public ?int $longContextThresholdTokens = null,
-        public ?int $longContextInputRateInUsdMicrosPerMillionTokens = null,
-        public ?int $longContextCachedInputRateInUsdMicrosPerMillionTokens = null,
-        public ?int $longContextOutputRateInUsdMicrosPerMillionTokens = null,
-        public ?int $cacheWrite5mInputRateInUsdMicrosPerMillionTokens = null,
-        public ?int $cacheWrite1hInputRateInUsdMicrosPerMillionTokens = null,
-        public ?int $longContextCacheWrite5mInputRateInUsdMicrosPerMillionTokens = null,
-        public ?int $longContextCacheWrite1hInputRateInUsdMicrosPerMillionTokens = null,
+        public ?int $longContextInputRateInUsdMicrocentPerMillionTokens = null,
+        public ?int $longContextCachedInputRateInUsdMicrocentPerMillionTokens = null,
+        public ?int $longContextOutputRateInUsdMicrocentPerMillionTokens = null,
+        public ?int $cacheWrite5mInputRateInUsdMicrocentPerMillionTokens = null,
+        public ?int $cacheWrite1hInputRateInUsdMicrocentPerMillionTokens = null,
+        public ?int $longContextCacheWrite5mInputRateInUsdMicrocentPerMillionTokens = null,
+        public ?int $longContextCacheWrite1hInputRateInUsdMicrocentPerMillionTokens = null,
     ) {
     }
 
@@ -37,43 +37,46 @@ final readonly class PriceCard
         return new self(
             model: $model,
             billingMode: $billingMode,
-            inputRateInUsdMicrosPerMillionTokens: self::requiredInt($card, 'input_usd_micros_per_million_tokens'),
-            cachedInputRateInUsdMicrosPerMillionTokens: self::nullableInt(
+            inputRateInUsdMicrocentPerMillionTokens: self::requiredInt($card, 'input_usd_microcent_per_million_tokens'),
+            cachedInputRateInUsdMicrocentPerMillionTokens: self::nullableInt(
                 $card,
-                'cached_input_usd_micros_per_million_tokens',
+                'cached_input_usd_microcent_per_million_tokens',
             ),
-            outputRateInUsdMicrosPerMillionTokens: self::requiredInt($card, 'output_usd_micros_per_million_tokens'),
+            outputRateInUsdMicrocentPerMillionTokens: self::requiredInt(
+                $card,
+                'output_usd_microcent_per_million_tokens',
+            ),
             longContextThresholdTokens: self::nullableInt(
                 $card,
                 'long_context_threshold_input_tokens',
             ),
-            longContextInputRateInUsdMicrosPerMillionTokens: self::nullableInt(
+            longContextInputRateInUsdMicrocentPerMillionTokens: self::nullableInt(
                 $card,
-                'long_context_input_usd_micros_per_million_tokens',
+                'long_context_input_usd_microcent_per_million_tokens',
             ),
-            longContextCachedInputRateInUsdMicrosPerMillionTokens: self::nullableInt(
+            longContextCachedInputRateInUsdMicrocentPerMillionTokens: self::nullableInt(
                 $card,
-                'long_context_cached_input_usd_micros_per_million_tokens',
+                'long_context_cached_input_usd_microcent_per_million_tokens',
             ),
-            longContextOutputRateInUsdMicrosPerMillionTokens: self::nullableInt(
+            longContextOutputRateInUsdMicrocentPerMillionTokens: self::nullableInt(
                 $card,
-                'long_context_output_usd_micros_per_million_tokens',
+                'long_context_output_usd_microcent_per_million_tokens',
             ),
-            cacheWrite5mInputRateInUsdMicrosPerMillionTokens: self::nullableInt(
+            cacheWrite5mInputRateInUsdMicrocentPerMillionTokens: self::nullableInt(
                 $card,
-                'cache_write_5m_input_usd_micros_per_million_tokens',
+                'cache_write_5m_input_usd_microcent_per_million_tokens',
             ),
-            cacheWrite1hInputRateInUsdMicrosPerMillionTokens: self::nullableInt(
+            cacheWrite1hInputRateInUsdMicrocentPerMillionTokens: self::nullableInt(
                 $card,
-                'cache_write_1h_input_usd_micros_per_million_tokens',
+                'cache_write_1h_input_usd_microcent_per_million_tokens',
             ),
-            longContextCacheWrite5mInputRateInUsdMicrosPerMillionTokens: self::nullableInt(
+            longContextCacheWrite5mInputRateInUsdMicrocentPerMillionTokens: self::nullableInt(
                 $card,
-                'long_context_cache_write_5m_input_usd_micros_per_million_tokens',
+                'long_context_cache_write_5m_input_usd_microcent_per_million_tokens',
             ),
-            longContextCacheWrite1hInputRateInUsdMicrosPerMillionTokens: self::nullableInt(
+            longContextCacheWrite1hInputRateInUsdMicrocentPerMillionTokens: self::nullableInt(
                 $card,
-                'long_context_cache_write_1h_input_usd_micros_per_million_tokens',
+                'long_context_cache_write_1h_input_usd_microcent_per_million_tokens',
             ),
         );
     }
@@ -84,66 +87,66 @@ final readonly class PriceCard
             && $usage->inputTokens > $this->longContextThresholdTokens;
     }
 
-    public function inputRateInUsdMicrosPerMillionTokensFor(UsageBreakdown $usage): int
+    public function inputRateInUsdMicrocentPerMillionTokensFor(UsageBreakdown $usage): int
     {
-        if ($this->usesLongContext($usage) && $this->longContextInputRateInUsdMicrosPerMillionTokens !== null) {
-            return $this->longContextInputRateInUsdMicrosPerMillionTokens;
+        if ($this->usesLongContext($usage) && $this->longContextInputRateInUsdMicrocentPerMillionTokens !== null) {
+            return $this->longContextInputRateInUsdMicrocentPerMillionTokens;
         }
 
-        return $this->inputRateInUsdMicrosPerMillionTokens;
+        return $this->inputRateInUsdMicrocentPerMillionTokens;
     }
 
-    public function cachedInputRateInUsdMicrosPerMillionTokensFor(UsageBreakdown $usage): int
+    public function cachedInputRateInUsdMicrocentPerMillionTokensFor(UsageBreakdown $usage): int
     {
-        $defaultRate = $this->cachedInputRateInUsdMicrosPerMillionTokens
-            ?? $this->inputRateInUsdMicrosPerMillionTokens;
+        $defaultRate = $this->cachedInputRateInUsdMicrocentPerMillionTokens
+            ?? $this->inputRateInUsdMicrocentPerMillionTokens;
 
         if (!$this->usesLongContext($usage)) {
             return $defaultRate;
         }
 
-        if ($this->longContextCachedInputRateInUsdMicrosPerMillionTokens !== null) {
-            return $this->longContextCachedInputRateInUsdMicrosPerMillionTokens;
+        if ($this->longContextCachedInputRateInUsdMicrocentPerMillionTokens !== null) {
+            return $this->longContextCachedInputRateInUsdMicrocentPerMillionTokens;
         }
 
-        if ($this->longContextInputRateInUsdMicrosPerMillionTokens !== null) {
-            return $this->longContextInputRateInUsdMicrosPerMillionTokens;
+        if ($this->longContextInputRateInUsdMicrocentPerMillionTokens !== null) {
+            return $this->longContextInputRateInUsdMicrocentPerMillionTokens;
         }
 
         return $defaultRate;
     }
 
-    public function outputRateInUsdMicrosPerMillionTokensFor(UsageBreakdown $usage): int
+    public function outputRateInUsdMicrocentPerMillionTokensFor(UsageBreakdown $usage): int
     {
-        if ($this->usesLongContext($usage) && $this->longContextOutputRateInUsdMicrosPerMillionTokens !== null) {
-            return $this->longContextOutputRateInUsdMicrosPerMillionTokens;
+        if ($this->usesLongContext($usage) && $this->longContextOutputRateInUsdMicrocentPerMillionTokens !== null) {
+            return $this->longContextOutputRateInUsdMicrocentPerMillionTokens;
         }
 
-        return $this->outputRateInUsdMicrosPerMillionTokens;
+        return $this->outputRateInUsdMicrocentPerMillionTokens;
     }
 
-    public function cacheWrite5mInputRateInUsdMicrosPerMillionTokensFor(UsageBreakdown $usage): ?int
+    public function cacheWrite5mInputRateInUsdMicrocentPerMillionTokensFor(UsageBreakdown $usage): ?int
     {
         if (
             $this->usesLongContext($usage)
-            && $this->longContextCacheWrite5mInputRateInUsdMicrosPerMillionTokens !== null
+            && $this->longContextCacheWrite5mInputRateInUsdMicrocentPerMillionTokens !== null
         ) {
-            return $this->longContextCacheWrite5mInputRateInUsdMicrosPerMillionTokens;
+            return $this->longContextCacheWrite5mInputRateInUsdMicrocentPerMillionTokens;
         }
 
-        return $this->cacheWrite5mInputRateInUsdMicrosPerMillionTokens;
+        return $this->cacheWrite5mInputRateInUsdMicrocentPerMillionTokens;
     }
 
-    public function cacheWrite1hInputRateInUsdMicrosPerMillionTokensFor(UsageBreakdown $usage): ?int
+    public function cacheWrite1hInputRateInUsdMicrocentPerMillionTokensFor(UsageBreakdown $usage): ?int
     {
         if (
             $this->usesLongContext($usage)
-            && $this->longContextCacheWrite1hInputRateInUsdMicrosPerMillionTokens !== null
+            && $this->longContextCacheWrite1hInputRateInUsdMicrocentPerMillionTokens !== null
         ) {
-            return $this->longContextCacheWrite1hInputRateInUsdMicrosPerMillionTokens;
+            return $this->longContextCacheWrite1hInputRateInUsdMicrocentPerMillionTokens;
         }
 
-        return $this->cacheWrite1hInputRateInUsdMicrosPerMillionTokens;
+        return $this->cacheWrite1hInputRateInUsdMicrocentPerMillionTokens;
     }
 
     /**

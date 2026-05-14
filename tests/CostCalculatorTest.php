@@ -35,13 +35,13 @@ final class CostCalculatorTest extends TestCase
             ),
         );
 
-        self::assertSame(2500, $breakdown->inputCostInUsdMicros);
-        self::assertSame(50, $breakdown->cachedInputCostInUsdMicros);
-        self::assertSame(4500, $breakdown->outputCostInUsdMicros);
-        self::assertSame(37050, $breakdown->totalCostInUsdMicros);
+        self::assertSame(250, $breakdown->inputCostInUsdMicrocent);
+        self::assertSame(5, $breakdown->cachedInputCostInUsdMicrocent);
+        self::assertSame(450, $breakdown->outputCostInUsdMicrocent);
+        self::assertSame(3705, $breakdown->totalCostInUsdMicrocent);
         self::assertSame('2026-05-13', $breakdown->pricingAsOf);
         self::assertSame('2026-05-13', $breakdown->toArray()['pricing_as_of']);
-        self::assertSame(37050, $breakdown->toArray()['total_cost_in_usd_micros']);
+        self::assertSame(3705, $breakdown->toArray()['total_cost_in_usd_microcent']);
     }
 
     public function testItCalculatesCostsFromAnAnthropicMessagesPayload(): void
@@ -54,12 +54,12 @@ final class CostCalculatorTest extends TestCase
         $calculator = new CostCalculator(StaticPriceProvider::default());
         $breakdown = $calculator->calculate($usage);
 
-        self::assertSame(3000, $breakdown->inputCostInUsdMicros);
-        self::assertSame(150, $breakdown->cachedInputCostInUsdMicros);
-        self::assertSame(750, $breakdown->cacheWrite5mInputCostInUsdMicros);
-        self::assertSame(600, $breakdown->cacheWrite1hInputCostInUsdMicros);
-        self::assertSame(6000, $breakdown->outputCostInUsdMicros);
-        self::assertSame(10500, $breakdown->totalCostInUsdMicros);
+        self::assertSame(300, $breakdown->inputCostInUsdMicrocent);
+        self::assertSame(15, $breakdown->cachedInputCostInUsdMicrocent);
+        self::assertSame(75, $breakdown->cacheWrite5mInputCostInUsdMicrocent);
+        self::assertSame(60, $breakdown->cacheWrite1hInputCostInUsdMicrocent);
+        self::assertSame(600, $breakdown->outputCostInUsdMicrocent);
+        self::assertSame(1050, $breakdown->totalCostInUsdMicrocent);
     }
 
     public function testItCalculatesCostsFromAGeminiGenerateContentPayload(): void
@@ -72,10 +72,10 @@ final class CostCalculatorTest extends TestCase
         $calculator = new CostCalculator(StaticPriceProvider::default());
         $breakdown = $calculator->calculate($usage);
 
-        self::assertSame(1250, $breakdown->inputCostInUsdMicros);
-        self::assertSame(25, $breakdown->cachedInputCostInUsdMicros);
-        self::assertSame(3000, $breakdown->outputCostInUsdMicros);
-        self::assertSame(4275, $breakdown->totalCostInUsdMicros);
+        self::assertSame(125, $breakdown->inputCostInUsdMicrocent);
+        self::assertSame(3, $breakdown->cachedInputCostInUsdMicrocent);
+        self::assertSame(300, $breakdown->outputCostInUsdMicrocent);
+        self::assertSame(428, $breakdown->totalCostInUsdMicrocent);
     }
 
     public function testItAppliesLongContextPricingForVersionedModelIds(): void
@@ -91,9 +91,9 @@ final class CostCalculatorTest extends TestCase
         $breakdown = $calculator->calculate($usage);
 
         self::assertTrue($breakdown->priceCard->usesLongContext($usage));
-        self::assertSame(1500000, $breakdown->inputCostInUsdMicros);
-        self::assertSame(22500, $breakdown->outputCostInUsdMicros);
-        self::assertSame(1522500, $breakdown->totalCostInUsdMicros);
+        self::assertSame(150000, $breakdown->inputCostInUsdMicrocent);
+        self::assertSame(2250, $breakdown->outputCostInUsdMicrocent);
+        self::assertSame(152250, $breakdown->totalCostInUsdMicrocent);
     }
 
     public function testItAppliesLongContextPricingForVersionedGeminiModelIds(): void
@@ -109,10 +109,10 @@ final class CostCalculatorTest extends TestCase
         $breakdown = $calculator->calculate($usage);
 
         self::assertTrue($breakdown->priceCard->usesLongContext($usage));
-        self::assertSame(500000, $breakdown->inputCostInUsdMicros);
-        self::assertSame(12500, $breakdown->cachedInputCostInUsdMicros);
-        self::assertSame(15000, $breakdown->outputCostInUsdMicros);
-        self::assertSame(527500, $breakdown->totalCostInUsdMicros);
+        self::assertSame(50000, $breakdown->inputCostInUsdMicrocent);
+        self::assertSame(1250, $breakdown->cachedInputCostInUsdMicrocent);
+        self::assertSame(1500, $breakdown->outputCostInUsdMicrocent);
+        self::assertSame(52750, $breakdown->totalCostInUsdMicrocent);
     }
 
     public function testItCalculatesCostsForNewlyAddedOpenAiLegacyModels(): void
@@ -127,10 +127,10 @@ final class CostCalculatorTest extends TestCase
         $calculator = new CostCalculator(StaticPriceProvider::default());
         $breakdown = $calculator->calculate($usage);
 
-        self::assertSame(3000, $breakdown->inputCostInUsdMicros);
-        self::assertSame(250, $breakdown->cachedInputCostInUsdMicros);
-        self::assertSame(2000, $breakdown->outputCostInUsdMicros);
-        self::assertSame(5250, $breakdown->totalCostInUsdMicros);
+        self::assertSame(300, $breakdown->inputCostInUsdMicrocent);
+        self::assertSame(25, $breakdown->cachedInputCostInUsdMicrocent);
+        self::assertSame(200, $breakdown->outputCostInUsdMicrocent);
+        self::assertSame(525, $breakdown->totalCostInUsdMicrocent);
     }
 
     public function testItCalculatesCostsForVersionedGpt5MiniModels(): void
@@ -145,9 +145,9 @@ final class CostCalculatorTest extends TestCase
         $calculator = new CostCalculator(StaticPriceProvider::default());
         $breakdown = $calculator->calculate($usage);
 
-        self::assertSame(375, $breakdown->inputCostInUsdMicros);
-        self::assertSame(13, $breakdown->cachedInputCostInUsdMicros);
-        self::assertSame(500, $breakdown->outputCostInUsdMicros);
-        self::assertSame(888, $breakdown->totalCostInUsdMicros);
+        self::assertSame(38, $breakdown->inputCostInUsdMicrocent);
+        self::assertSame(1, $breakdown->cachedInputCostInUsdMicrocent);
+        self::assertSame(50, $breakdown->outputCostInUsdMicrocent);
+        self::assertSame(89, $breakdown->totalCostInUsdMicrocent);
     }
 }

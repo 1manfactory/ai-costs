@@ -6,10 +6,16 @@ namespace AiCosts\Support;
 
 use InvalidArgumentException;
 
-final class UsdMicros
+/**
+ * Project money unit: one hundred-thousandth of one US dollar.
+ *
+ * 1 USD = 100,000 usd_microcent
+ * 1 usd_microcent = 0.00001 USD = 0.001 cents
+ */
+final class UsdMicrocent
 {
     public static function calculateAmount(
-        int $rateInUsdMicrosPerUnitBlock,
+        int $rateInUsdMicrocentPerUnitBlock,
         int $billedUnits,
         int $unitBlockSize = 1_000_000,
     ): int {
@@ -21,7 +27,7 @@ final class UsdMicros
             throw new InvalidArgumentException('unitBlockSize must be >= 1.');
         }
 
-        return self::roundDivide($rateInUsdMicrosPerUnitBlock * $billedUnits, $unitBlockSize);
+        return self::roundDivide($rateInUsdMicrocentPerUnitBlock * $billedUnits, $unitBlockSize);
     }
 
     private static function roundDivide(int $numerator, int $denominator): int

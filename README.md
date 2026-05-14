@@ -9,10 +9,14 @@ It is designed to stay SDK-agnostic: feed it an OpenAI, Anthropic Claude, or Goo
 
 ## Units
 
-All calculated cost values are returned as integers in `usd_micros`.
+All calculated cost values are returned as integers in `usd_microcent`.
 
-- `1 USD = 1_000_000 usd_micros`
-- Public variable and method names use explicit unit suffixes like `InUsdMicros`
+- `usd_microcent` is the only money unit used by this package
+- `1 USD = 100_000 usd_microcent`
+- `1 usd_microcent = 0.00001 USD = 0.001 cents`
+- `1 cent = 1_000 usd_microcent`
+- Provider APIs do not return money amounts; they return usage counts, and this package converts those counts into estimated `usd_microcent`
+- Public variable and method names use explicit unit suffixes like `InUsdMicrocent`
 - The package returns integers only
 
 ## Current scope
@@ -70,8 +74,8 @@ $breakdown = $calculator->calculate(
     ),
 );
 
-echo $breakdown->totalCostInUsdMicros;
-// 37050
+echo $breakdown->totalCostInUsdMicrocent;
+// 3705
 ```
 
 ## Included building blocks
@@ -95,7 +99,7 @@ echo $breakdown->totalCostInUsdMicros;
 - Audio token pricing is intentionally blocked in this MVP so the library does not undercount usage silently.
 - All calculated values are estimates only; authoritative billing always comes from OpenAI.
 - Claude and Gemini usage is also estimated from official public pricing docs; provider billing remains authoritative.
-- Canonical cost outputs are integer `usd_micros`.
+- Canonical cost outputs are integer `usd_microcent`.
 - The package is not affiliated with or endorsed by OpenAI, Anthropic, or Google.
 - This package is licensed under the MIT License.
 
