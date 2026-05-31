@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'as_of' => '2026-05-13',
+    'as_of' => '2026-05-31',
     'source' => 'https://developers.openai.com/api/docs/pricing',
     'models' => [
         'gpt-5.5' => [
@@ -104,7 +104,9 @@ return [
             ],
         ],
         'gpt-5.4-mini' => [
-            'aliases' => [],
+            'aliases' => [
+                'gpt-5.4-mini-2026-03-17',
+            ],
             'cards' => [
                 'standard' => [
                     'input_usd_microcent_per_million_tokens' => 75_000,
@@ -129,7 +131,9 @@ return [
             ],
         ],
         'gpt-5.4-nano' => [
-            'aliases' => [],
+            'aliases' => [
+                'gpt-5.4-nano-2026-03-17',
+            ],
             'cards' => [
                 'standard' => [
                     'input_usd_microcent_per_million_tokens' => 20_000,

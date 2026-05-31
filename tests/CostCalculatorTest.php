@@ -39,8 +39,8 @@ final class CostCalculatorTest extends TestCase
         self::assertSame(5, $breakdown->cachedInputCostInUsdMicrocent);
         self::assertSame(450, $breakdown->outputCostInUsdMicrocent);
         self::assertSame(3705, $breakdown->totalCostInUsdMicrocent);
-        self::assertSame('2026-05-13', $breakdown->pricingAsOf);
-        self::assertSame('2026-05-13', $breakdown->toArray()['pricing_as_of']);
+        self::assertSame('2026-05-31', $breakdown->pricingAsOf);
+        self::assertSame('2026-05-31', $breakdown->toArray()['pricing_as_of']);
         self::assertSame(3705, $breakdown->toArray()['total_cost_in_usd_microcent']);
     }
 
@@ -149,5 +149,41 @@ final class CostCalculatorTest extends TestCase
         self::assertSame(1, $breakdown->cachedInputCostInUsdMicrocent);
         self::assertSame(50, $breakdown->outputCostInUsdMicrocent);
         self::assertSame(89, $breakdown->totalCostInUsdMicrocent);
+    }
+
+    public function testItCalculatesCostsForVersionedGpt54MiniModels(): void
+    {
+        $usage = new UsageBreakdown(
+            model: 'gpt-5.4-mini-2026-03-17',
+            inputTokens: 2000,
+            cachedInputTokens: 500,
+            outputTokens: 250,
+        );
+
+        $calculator = new CostCalculator(StaticPriceProvider::default());
+        $breakdown = $calculator->calculate($usage);
+
+        self::assertSame(113, $breakdown->inputCostInUsdMicrocent);
+        self::assertSame(4, $breakdown->cachedInputCostInUsdMicrocent);
+        self::assertSame(113, $breakdown->outputCostInUsdMicrocent);
+        self::assertSame(230, $breakdown->totalCostInUsdMicrocent);
+    }
+
+    public function testItCalculatesCostsForVersionedGpt54NanoModels(): void
+    {
+        $usage = new UsageBreakdown(
+            model: 'gpt-5.4-nano-2026-03-17',
+            inputTokens: 2000,
+            cachedInputTokens: 500,
+            outputTokens: 250,
+        );
+
+        $calculator = new CostCalculator(StaticPriceProvider::default());
+        $breakdown = $calculator->calculate($usage);
+
+        self::assertSame(30, $breakdown->inputCostInUsdMicrocent);
+        self::assertSame(1, $breakdown->cachedInputCostInUsdMicrocent);
+        self::assertSame(31, $breakdown->outputCostInUsdMicrocent);
+        self::assertSame(62, $breakdown->totalCostInUsdMicrocent);
     }
 }
