@@ -134,13 +134,15 @@ After the repository is submitted once on Packagist, each new Git tag becomes a 
 
 ## Pricing sources
 
-The bundled pricing catalog is based on official provider docs as of `2026-05-31`.
+The bundled pricing catalog is based on official provider docs as of `2026-06-07`.
+
+On `2026-06-07`, the bundled model prices and OpenAI helper tool charges were re-checked against the official pricing pages linked below. No token-price changes were required for the models currently included in this repository; this update brings the verification date and documentation in sync with that review.
 
 | Provider | Included model families | Billing modes in catalog | Last verified |
 | --- | --- | --- | --- |
-| OpenAI | `gpt-5.5`, `gpt-5.5-pro`, `gpt-5.4`, `gpt-5.4-mini`, `gpt-5.4-nano`, `gpt-5.4-pro`, `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-5-pro`, `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, `gpt-4o`, `gpt-4o-mini`, `o1`, `o1-mini`, `o1-pro`, `o3`, `o3-mini`, `o3-pro`, `o4-mini`, `o3-deep-research`, `o4-mini-deep-research`, `codex-mini-latest`, `computer-use-preview`, `gpt-4-turbo`, `gpt-4`, `gpt-3.5-turbo`, `gpt-3.5-turbo-instruct` | `standard`, selected `batch`, selected `flex`, selected `priority` | `2026-05-31` |
-| Anthropic | `claude-opus-4-7`, `claude-sonnet-4-6`, `claude-haiku-4-5` | `standard`, `batch` | `2026-05-31` |
-| Google Gemini | `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.5-flash-lite` | `standard`, `batch`, `flex`, `priority` | `2026-05-31` |
+| OpenAI | `gpt-5.5`, `gpt-5.5-pro`, `gpt-5.4`, `gpt-5.4-mini`, `gpt-5.4-nano`, `gpt-5.4-pro`, `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-5-pro`, `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, `gpt-4o`, `gpt-4o-mini`, `o1`, `o1-mini`, `o1-pro`, `o3`, `o3-mini`, `o3-pro`, `o4-mini`, `o3-deep-research`, `o4-mini-deep-research`, `codex-mini-latest`, `computer-use-preview`, `gpt-4-turbo`, `gpt-4`, `gpt-3.5-turbo`, `gpt-3.5-turbo-instruct` | `standard`, selected `batch`, selected `flex`, selected `priority` | `2026-06-07` |
+| Anthropic | `claude-opus-4-7`, `claude-sonnet-4-6`, `claude-haiku-4-5` | `standard`, `batch` | `2026-06-07` |
+| Google Gemini | `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.5-flash-lite` | `standard`, `batch`, `flex`, `priority` | `2026-06-07` |
 
 - OpenAI pricing overview: <https://developers.openai.com/api/docs/pricing>
 - OpenAI GPT-5.4 model page: <https://developers.openai.com/api/docs/models/gpt-5.4/>

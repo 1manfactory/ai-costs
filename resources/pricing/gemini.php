@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'as_of' => '2026-05-31',
+    'as_of' => '2026-06-07',
     'source' => 'https://ai.google.dev/gemini-api/docs/pricing',
     'models' => [
         'gemini-2.5-pro' => [

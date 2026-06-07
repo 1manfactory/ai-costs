@@ -10,7 +10,7 @@ use AiCosts\Value\AdditionalCharge;
 
 final class OpenAIToolPricing
 {
-    public const AS_OF = '2026-05-31';
+    public const AS_OF = '2026-06-07';
 
     public static function webSearchCalls(int $calls): AdditionalCharge
     {
