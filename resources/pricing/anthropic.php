@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'as_of' => '2026-06-07',
+    'as_of' => '2026-07-08',
     'source' => 'https://platform.claude.com/docs/en/about-claude/pricing',
     'models' => [
         'claude-opus-4-7' => [

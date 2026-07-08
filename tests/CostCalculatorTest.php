@@ -39,8 +39,8 @@ final class CostCalculatorTest extends TestCase
         self::assertSame(5, $breakdown->cachedInputCostInUsdMicrocent);
         self::assertSame(450, $breakdown->outputCostInUsdMicrocent);
         self::assertSame(3705, $breakdown->totalCostInUsdMicrocent);
-        self::assertSame('2026-06-07', $breakdown->pricingAsOf);
-        self::assertSame('2026-06-07', $breakdown->toArray()['pricing_as_of']);
+        self::assertSame('2026-07-08', $breakdown->pricingAsOf);
+        self::assertSame('2026-07-08', $breakdown->toArray()['pricing_as_of']);
         self::assertSame(3705, $breakdown->toArray()['total_cost_in_usd_microcent']);
     }
 
