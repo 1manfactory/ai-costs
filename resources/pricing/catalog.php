@@ -13,7 +13,7 @@ $models = [];
 $asOf = 'unknown';
 $sourceUrls = [];
 $providers = [];
-$version = '2026-07-08';
+$version = '2026-07-15';
 
 foreach ($catalogs as $catalog) {
     $catalogAsOf = $catalog['as_of'] ?? null;

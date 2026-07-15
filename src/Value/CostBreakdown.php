@@ -22,6 +22,7 @@ final readonly class CostBreakdown
         public int $outputCostInUsdMicrocent,
         public array $additionalCharges,
         public int $totalCostInUsdMicrocent,
+        public int $cacheWriteInputCostInUsdMicrocent = 0,
         public int $cacheWrite5mInputCostInUsdMicrocent = 0,
         public int $cacheWrite1hInputCostInUsdMicrocent = 0,
     ) {
@@ -40,6 +41,7 @@ final readonly class CostBreakdown
             'context_tier' => $this->context->serviceTier ?? $this->usage->serviceTier,
             'input_cost_in_usd_microcent' => $this->inputCostInUsdMicrocent,
             'cached_input_cost_in_usd_microcent' => $this->cachedInputCostInUsdMicrocent,
+            'cache_write_input_cost_in_usd_microcent' => $this->cacheWriteInputCostInUsdMicrocent,
             'cache_write_5m_input_cost_in_usd_microcent' => $this->cacheWrite5mInputCostInUsdMicrocent,
             'cache_write_1h_input_cost_in_usd_microcent' => $this->cacheWrite1hInputCostInUsdMicrocent,
             'output_cost_in_usd_microcent' => $this->outputCostInUsdMicrocent,

@@ -28,6 +28,7 @@ final class OpenAIChatCompletionsUsageExtractor implements UsageExtractorInterfa
             model: $model,
             inputTokens: $this->intFrom($usage, 'prompt_tokens'),
             cachedInputTokens: $this->intFromNested($usage, ['prompt_tokens_details', 'cached_tokens']),
+            cacheWriteInputTokens: $this->intFromNested($usage, ['prompt_tokens_details', 'cache_write_tokens']),
             outputTokens: $this->intFrom($usage, 'completion_tokens'),
             reasoningTokens: $this->intFromNested($usage, ['completion_tokens_details', 'reasoning_tokens']),
             inputAudioTokens: $this->intFromNested($usage, ['prompt_tokens_details', 'audio_tokens']),

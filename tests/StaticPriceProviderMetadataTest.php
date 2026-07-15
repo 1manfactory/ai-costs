@@ -6,6 +6,7 @@ namespace AiCosts\Tests;
 
 use AiCosts\Exception\UnknownProvider;
 use AiCosts\Pricing\StaticPriceProvider;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
@@ -13,21 +14,24 @@ final class StaticPriceProviderMetadataTest extends TestCase
 {
     public function testItExposesTheCatalogVersion(): void
     {
-        $catalog = StaticPriceProvider::default();
+        $catalog = $this->provider();
 
-        self::assertSame('2026-07-08', $catalog->version);
+        self::assertSame('2026-07-15', $catalog->version);
     }
 
     public function testItExposesOpenAiProviderMetadata(): void
     {
-        $metadata = StaticPriceProvider::default()->provider('openai');
+        $metadata = $this->provider()->provider('openai');
 
-        self::assertSame('2026-07-08', $metadata->verifiedAt);
+        self::assertSame('2026-07-15', $metadata->verifiedAt);
         self::assertSame(
             [
                 'https://developers.openai.com/api/docs/pricing',
-                'https://developers.openai.com/api/docs/models/gpt-5.4/',
-                'https://developers.openai.com/api/docs/models/gpt-5.4-pro',
+                'https://developers.openai.com/api/docs/guides/prompt-caching',
+                'https://developers.openai.com/api/docs/models/gpt-5.6-sol',
+                'https://developers.openai.com/api/docs/models/gpt-5.6-terra',
+                'https://developers.openai.com/api/docs/models/gpt-5.6-luna',
+                'https://developers.openai.com/api/docs/models/gpt-5.5-pro',
             ],
             $metadata->sourceUrls,
         );
@@ -35,21 +39,21 @@ final class StaticPriceProviderMetadataTest extends TestCase
 
     public function testItExposesAnthropicProviderMetadata(): void
     {
-        $metadata = StaticPriceProvider::default()->provider('anthropic');
+        $metadata = $this->provider()->provider('anthropic');
 
-        self::assertSame('2026-07-08', $metadata->verifiedAt);
+        self::assertSame('2026-07-15', $metadata->verifiedAt);
     }
 
     public function testItExposesGeminiProviderMetadata(): void
     {
-        $metadata = StaticPriceProvider::default()->provider('gemini');
+        $metadata = $this->provider()->provider('gemini');
 
-        self::assertSame('2026-07-08', $metadata->verifiedAt);
+        self::assertSame('2026-07-15', $metadata->verifiedAt);
     }
 
     public function testGlobalSourcesContainAllProviderSourcesWithoutDuplicates(): void
     {
-        $catalog = StaticPriceProvider::default();
+        $catalog = $this->provider();
         $providerSourceUrls = array_merge(
             $catalog->provider('openai')->sourceUrls,
             $catalog->provider('anthropic')->sourceUrls,
@@ -65,7 +69,7 @@ final class StaticPriceProviderMetadataTest extends TestCase
 
     public function testItThrowsForAnUnknownProvider(): void
     {
-        $catalog = StaticPriceProvider::default();
+        $catalog = $this->provider();
 
         $this->expectException(UnknownProvider::class);
         $this->expectExceptionMessage(
@@ -77,12 +81,17 @@ final class StaticPriceProviderMetadataTest extends TestCase
 
     public function testProviderMetadataIsImmutable(): void
     {
-        $metadata = StaticPriceProvider::default()->provider('openai');
+        $metadata = $this->provider()->provider('openai');
         $reflection = new ReflectionClass($metadata);
 
         self::assertTrue($reflection->isReadOnly());
         self::assertTrue($reflection->getProperty('name')->isReadOnly());
         self::assertTrue($reflection->getProperty('verifiedAt')->isReadOnly());
         self::assertTrue($reflection->getProperty('sourceUrls')->isReadOnly());
+    }
+
+    private function provider(): StaticPriceProvider
+    {
+        return StaticPriceProvider::default(new DateTimeImmutable('2026-07-15'));
     }
 }

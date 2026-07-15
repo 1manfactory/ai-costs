@@ -10,6 +10,8 @@ use AiCosts\Exception\UnknownModel;
 use AiCosts\Exception\UnknownProvider;
 use AiCosts\Value\PriceCard;
 use AiCosts\Value\ProviderMetadata;
+use DateTimeImmutable;
+use DateTimeZone;
 
 final class StaticPriceProvider implements PriceProviderInterface
 {
@@ -37,25 +39,32 @@ final class StaticPriceProvider implements PriceProviderInterface
      */
     private readonly array $aliases;
 
+    private readonly DateTimeImmutable $pricingDate;
+
+    private readonly StaticPricingPeriods $pricingPeriods;
+
     /**
      * @param array<string, mixed> $catalog
      */
-    public function __construct(array $catalog)
+    public function __construct(array $catalog, ?DateTimeImmutable $pricingDate = null)
     {
         $this->metadata = new StaticCatalogMetadata($catalog);
         $this->catalog = $catalog;
         $this->version = $this->metadata->version;
         $this->sourceUrls = $this->metadata->sourceUrls;
         $this->providers = $this->providerMetadataMap();
+        $this->pricingDate = $this->resolvePricingDate($pricingDate);
+        $this->pricingPeriods = new StaticPricingPeriods($this->pricingDate);
+        $this->assertCardCatalogIsValid();
         $this->aliases = $this->buildAliasMap($this->models());
     }
 
-    public static function default(): self
+    public static function default(?DateTimeImmutable $pricingDate = null): self
     {
         /** @var array<string, mixed> $catalog */
         $catalog = require dirname(__DIR__, 2) . '/resources/pricing/catalog.php';
 
-        return new self($catalog);
+        return new self($catalog, $pricingDate);
     }
 
     public function asOf(): string
@@ -94,15 +103,19 @@ final class StaticPriceProvider implements PriceProviderInterface
             throw new UnknownModel(sprintf('No pricing entry found for model `%s`.', $model));
         }
 
-        $card = $this->cardsFromEntry($entry)[$billingMode->value] ?? null;
+        $cardEntry = $this->cardsFromEntry($entry)[$billingMode->value] ?? null;
 
-        if ($card === null) {
+        if ($cardEntry === null) {
             throw new UnknownModel(
                 sprintf('No `%s` pricing configured for model `%s`.', $billingMode->value, $canonicalModel),
             );
         }
 
-        return PriceCard::fromArray($canonicalModel, $billingMode, $card);
+        return PriceCard::fromArray(
+            $canonicalModel,
+            $billingMode,
+            $this->pricingPeriods->resolveCardData($canonicalModel, $billingMode, $cardEntry),
+        );
     }
 
     public function pricedModels(): array
@@ -249,6 +262,7 @@ final class StaticPriceProvider implements PriceProviderInterface
     {
         $providers = [];
         $supportedProviders = ['openai', 'anthropic', 'gemini'];
+
         foreach ($supportedProviders as $providerKey) {
             $provider = $this->metadata->provider($providerKey);
 
@@ -258,5 +272,25 @@ final class StaticPriceProvider implements PriceProviderInterface
         }
 
         return $providers;
+    }
+
+    private function resolvePricingDate(?DateTimeImmutable $pricingDate): DateTimeImmutable
+    {
+        $utc = new DateTimeZone('UTC');
+
+        if ($pricingDate === null) {
+            return new DateTimeImmutable('now', $utc);
+        }
+
+        return $pricingDate->setTimezone($utc);
+    }
+
+    private function assertCardCatalogIsValid(): void
+    {
+        foreach ($this->models() as $model => $entry) {
+            foreach ($this->cardsFromEntry($entry) as $billingMode => $cardEntry) {
+                $this->pricingPeriods->assertCardEntryIsValid($model, $billingMode, $cardEntry);
+            }
+        }
     }
 }

@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace AiCosts\Tests;
 
+use AiCosts\Contract\PriceProviderInterface;
 use AiCosts\Exception\InvalidPricingCatalog;
 use AiCosts\Pricing\StaticPriceProvider;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 final class StaticPriceProviderValidationTest extends TestCase
 {
@@ -18,22 +21,18 @@ final class StaticPriceProviderValidationTest extends TestCase
         $this->expectException(InvalidPricingCatalog::class);
         $this->expectExceptionMessage('Pricing catalog version must be a non-empty string.');
 
-        new StaticPriceProvider($catalog);
+        new StaticPriceProvider($catalog, new DateTimeImmutable('2026-07-15'));
     }
 
     public function testItRejectsAnInvalidVerifiedAtDate(): void
     {
         $catalog = $this->validCatalog();
-        $catalog['providers'] = $this->catalogWithProviderDate(
-            $catalog['providers'],
-            'openai',
-            '2026/07/08',
-        );
+        $catalog['providers'] = $this->catalogWithProviderDate($catalog['providers'], 'openai', '2026/07/15');
 
         $this->expectException(InvalidPricingCatalog::class);
         $this->expectExceptionMessage('Provider `openai` must have a verified_at date in YYYY-MM-DD format.');
 
-        new StaticPriceProvider($catalog);
+        new StaticPriceProvider($catalog, new DateTimeImmutable('2026-07-15'));
     }
 
     public function testItRejectsAnInvalidSourceUrl(): void
@@ -50,7 +49,7 @@ final class StaticPriceProviderValidationTest extends TestCase
             'Provider `gemini` source URLs must contain only valid absolute HTTPS URLs.',
         );
 
-        new StaticPriceProvider($catalog);
+        new StaticPriceProvider($catalog, new DateTimeImmutable('2026-07-15'));
     }
 
     public function testItRejectsDuplicateGlobalSourceUrls(): void
@@ -61,7 +60,33 @@ final class StaticPriceProviderValidationTest extends TestCase
         $this->expectException(InvalidPricingCatalog::class);
         $this->expectExceptionMessage('Pricing catalog source URLs must not contain duplicate URLs.');
 
-        new StaticPriceProvider($catalog);
+        new StaticPriceProvider($catalog, new DateTimeImmutable('2026-07-15'));
+    }
+
+    public function testUnboundedPriceCardsStillWork(): void
+    {
+        $provider = StaticPriceProvider::default(new DateTimeImmutable('2026-07-15'));
+        $card = $provider->get('gpt-5.4', \AiCosts\Enum\BillingMode::STANDARD);
+
+        self::assertSame('gpt-5.4', $card->model);
+        self::assertSame(250_000, $card->inputRateInUsdMicrocentPerMillionTokens);
+    }
+
+    public function testPriceProviderInterfaceRemainsUnchanged(): void
+    {
+        $reflection = new ReflectionClass(PriceProviderInterface::class);
+        $methodNames = array_map(
+            static fn (\ReflectionMethod $method): string => $method->getName(),
+            $reflection->getMethods(),
+        );
+        sort($methodNames);
+
+        self::assertSame(['asOf', 'get', 'pricedModels'], $methodNames);
+    }
+
+    public function testStaticPriceProviderDefaultWithoutArgumentRemainsValid(): void
+    {
+        self::assertInstanceOf(StaticPriceProvider::class, StaticPriceProvider::default());
     }
 
     /**

@@ -6,6 +6,8 @@ namespace AiCosts\Pricing;
 
 use AiCosts\Exception\InvalidPricingCatalog;
 use AiCosts\Value\ProviderMetadata;
+use DateTimeImmutable;
+use DateTimeZone;
 
 final readonly class StaticCatalogMetadata
 {
@@ -105,7 +107,7 @@ final readonly class StaticCatalogMetadata
 
         $verifiedAt = $provider['verified_at'] ?? null;
 
-        if (!is_string($verifiedAt) || preg_match('/^\d{4}-\d{2}-\d{2}$/', $verifiedAt) !== 1) {
+        if (!is_string($verifiedAt) || !$this->isValidDateString($verifiedAt)) {
             throw new InvalidPricingCatalog(
                 sprintf('Provider `%s` must have a verified_at date in YYYY-MM-DD format.', $providerKey),
             );
@@ -137,5 +139,12 @@ final readonly class StaticCatalogMetadata
         }
 
         return str_starts_with($url, 'https://');
+    }
+
+    private function isValidDateString(string $value): bool
+    {
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value, new DateTimeZone('UTC'));
+
+        return $date !== false && $date->format('Y-m-d') === $value;
     }
 }

@@ -11,6 +11,7 @@ return [
         'prompt_tokens' => 1500,
         'prompt_tokens_details' => [
             'cached_tokens' => 500,
+            'cache_write_tokens' => 0,
         ],
         'completion_tokens' => 600,
         'completion_tokens_details' => [

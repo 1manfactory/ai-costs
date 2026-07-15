@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AiCosts\Value;
 
 use AiCosts\Enum\BillingMode;
+use AiCosts\Enum\ContextPricingMode;
 use InvalidArgumentException;
 
 final readonly class BillingContext
@@ -21,6 +22,7 @@ final readonly class BillingContext
         public BillingMode $billingMode = BillingMode::STANDARD,
         public ?string $serviceTier = null,
         array $additionalCharges = [],
+        public ContextPricingMode $contextPricingMode = ContextPricingMode::AUTO,
     ) {
         $validatedCharges = [];
 

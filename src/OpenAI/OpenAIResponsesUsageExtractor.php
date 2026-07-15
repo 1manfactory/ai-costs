@@ -28,6 +28,7 @@ final class OpenAIResponsesUsageExtractor implements UsageExtractorInterface
             model: $model,
             inputTokens: $this->intFrom($usage, 'input_tokens'),
             cachedInputTokens: $this->intFromNested($usage, ['input_tokens_details', 'cached_tokens']),
+            cacheWriteInputTokens: $this->intFromNested($usage, ['input_tokens_details', 'cache_write_tokens']),
             outputTokens: $this->intFrom($usage, 'output_tokens'),
             reasoningTokens: $this->intFromNested($usage, ['output_tokens_details', 'reasoning_tokens']),
             inputAudioTokens: $this->intFromNested($usage, ['input_tokens_details', 'audio_tokens']),

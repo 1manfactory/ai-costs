@@ -11,6 +11,7 @@ return [
         'input_tokens' => 1200,
         'input_tokens_details' => [
             'cached_tokens' => 200,
+            'cache_write_tokens' => 0,
         ],
         'output_tokens' => 300,
         'output_tokens_details' => [
