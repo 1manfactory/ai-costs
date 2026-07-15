@@ -74,8 +74,11 @@ $breakdown = $calculator->calculate(
     ),
 );
 
+echo $breakdown->inputCostInUsdMicrocent;
+echo $breakdown->cachedInputCostInUsdMicrocent;
+echo $breakdown->outputCostInUsdMicrocent;
+echo $breakdown->additionalChargesInUsdMicrocent;
 echo $breakdown->totalCostInUsdMicrocent;
-// 3705
 ```
 
 ## Included building blocks
@@ -88,6 +91,24 @@ echo $breakdown->totalCostInUsdMicrocent;
 - `AiCosts\Gemini\GeminiGenerateContentUsageExtractor`
 - `AiCosts\OpenAI\OpenAIToolPricing`
 
+## Pricing catalog metadata
+
+```php
+$catalog = StaticPriceProvider::default();
+
+echo $catalog->version;
+echo $catalog->provider('openai')->verifiedAt;
+
+foreach ($catalog->provider('openai')->sourceUrls as $sourceUrl) {
+    echo $sourceUrl . PHP_EOL;
+}
+```
+
+- `version` identifies the revision of the bundled pricing catalog.
+- `verifiedAt` is the last verification date recorded for that provider.
+- `sourceUrls` lists the official documentation URLs used for that provider and the global catalog.
+- The metadata does not prove that prices remained unchanged after the recorded verification date.
+
 ## Notes
 
 - The packaged price catalog is intentionally static and versioned in the repo.
@@ -97,7 +118,7 @@ echo $breakdown->totalCostInUsdMicrocent;
 - `gpt-5.5-pro` pricing is included, but long-context auto-switching is intentionally disabled in this MVP until the threshold rule is modeled explicitly in the catalog.
 - Explicit Gemini cache storage charges and grounding/tool surcharges are not auto-derived from a single response payload in this MVP.
 - Audio token pricing is intentionally blocked in this MVP so the library does not undercount usage silently.
-- All calculated values are estimates only; authoritative billing always comes from OpenAI.
+- All calculated values are estimates only; authoritative billing always comes from the respective provider.
 - Claude and Gemini usage is also estimated from official public pricing docs; provider billing remains authoritative.
 - Canonical cost outputs are integer `usd_microcent`.
 - The package is not affiliated with or endorsed by OpenAI, Anthropic, or Google.

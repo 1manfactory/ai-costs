@@ -3,8 +3,13 @@
 declare(strict_types=1);
 
 return [
+    'provider' => 'anthropic',
+    'name' => 'anthropic',
     'as_of' => '2026-07-08',
-    'source' => 'https://platform.claude.com/docs/en/about-claude/pricing',
+    'source_urls' => [
+        'https://platform.claude.com/docs/en/about-claude/pricing',
+        'https://platform.claude.com/docs/en/about-claude/models/overview',
+    ],
     'models' => [
         'claude-opus-4-7' => [
             'aliases' => [],

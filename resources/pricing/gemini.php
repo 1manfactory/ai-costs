@@ -3,8 +3,13 @@
 declare(strict_types=1);
 
 return [
+    'provider' => 'gemini',
+    'name' => 'gemini',
     'as_of' => '2026-07-08',
-    'source' => 'https://ai.google.dev/gemini-api/docs/pricing',
+    'source_urls' => [
+        'https://ai.google.dev/gemini-api/docs/pricing',
+        'https://ai.google.dev/api/generate-content',
+    ],
     'models' => [
         'gemini-2.5-pro' => [
             'aliases' => [],

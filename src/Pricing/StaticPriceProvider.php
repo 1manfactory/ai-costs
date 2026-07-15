@@ -7,14 +7,30 @@ namespace AiCosts\Pricing;
 use AiCosts\Contract\PriceProviderInterface;
 use AiCosts\Enum\BillingMode;
 use AiCosts\Exception\UnknownModel;
+use AiCosts\Exception\UnknownProvider;
 use AiCosts\Value\PriceCard;
+use AiCosts\Value\ProviderMetadata;
 
 final class StaticPriceProvider implements PriceProviderInterface
 {
+    public readonly string $version;
+
+    /**
+     * @var list<string>
+     */
+    public readonly array $sourceUrls;
+
     /**
      * @var array<string, mixed>
      */
     private readonly array $catalog;
+
+    /**
+     * @var array<string, ProviderMetadata>
+     */
+    private readonly array $providers;
+
+    private readonly StaticCatalogMetadata $metadata;
 
     /**
      * @var array<string, string>
@@ -26,7 +42,11 @@ final class StaticPriceProvider implements PriceProviderInterface
      */
     public function __construct(array $catalog)
     {
+        $this->metadata = new StaticCatalogMetadata($catalog);
         $this->catalog = $catalog;
+        $this->version = $this->metadata->version;
+        $this->sourceUrls = $this->metadata->sourceUrls;
+        $this->providers = $this->providerMetadataMap();
         $this->aliases = $this->buildAliasMap($this->models());
     }
 
@@ -43,6 +63,26 @@ final class StaticPriceProvider implements PriceProviderInterface
         $asOf = $this->catalog['as_of'] ?? 'unknown';
 
         return is_string($asOf) ? $asOf : 'unknown';
+    }
+
+    public function provider(string $name): ProviderMetadata
+    {
+        $provider = $this->providers[$name] ?? null;
+
+        if ($provider !== null) {
+            return $provider;
+        }
+
+        $supportedProviders = array_keys($this->providers);
+        sort($supportedProviders);
+
+        throw new UnknownProvider(
+            sprintf(
+                'Unknown provider `%s`. Supported providers: %s.',
+                $name,
+                implode(', ', $supportedProviders),
+            ),
+        );
     }
 
     public function get(string $model, BillingMode $billingMode): PriceCard
@@ -200,5 +240,23 @@ final class StaticPriceProvider implements PriceProviderInterface
         }
 
         return $normalized;
+    }
+
+    /**
+     * @return array<string, ProviderMetadata>
+     */
+    private function providerMetadataMap(): array
+    {
+        $providers = [];
+        $supportedProviders = ['openai', 'anthropic', 'gemini'];
+        foreach ($supportedProviders as $providerKey) {
+            $provider = $this->metadata->provider($providerKey);
+
+            if ($provider !== null) {
+                $providers[$providerKey] = $provider;
+            }
+        }
+
+        return $providers;
     }
 }

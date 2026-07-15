@@ -3,8 +3,14 @@
 declare(strict_types=1);
 
 return [
+    'provider' => 'openai',
+    'name' => 'openai',
     'as_of' => '2026-07-08',
-    'source' => 'https://developers.openai.com/api/docs/pricing',
+    'source_urls' => [
+        'https://developers.openai.com/api/docs/pricing',
+        'https://developers.openai.com/api/docs/models/gpt-5.4/',
+        'https://developers.openai.com/api/docs/models/gpt-5.4-pro',
+    ],
     'models' => [
         'gpt-5.5' => [
             'aliases' => [

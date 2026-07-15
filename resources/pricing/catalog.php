@@ -11,7 +11,9 @@ $catalogs = [
 
 $models = [];
 $asOf = 'unknown';
-$sources = [];
+$sourceUrls = [];
+$providers = [];
+$version = '2026-07-08';
 
 foreach ($catalogs as $catalog) {
     $catalogAsOf = $catalog['as_of'] ?? null;
@@ -20,10 +22,22 @@ foreach ($catalogs as $catalog) {
         $asOf = $catalogAsOf;
     }
 
-    $source = $catalog['source'] ?? null;
+    $providerKey = $catalog['provider'] ?? null;
+    $providerName = $catalog['name'] ?? null;
+    $providerSourceUrls = $catalog['source_urls'] ?? null;
 
-    if (is_string($source)) {
-        $sources[] = $source;
+    if (is_string($providerKey) && is_string($providerName) && is_array($providerSourceUrls)) {
+        $providers[$providerKey] = [
+            'name' => $providerName,
+            'verified_at' => $catalogAsOf,
+            'source_urls' => $providerSourceUrls,
+        ];
+
+        foreach ($providerSourceUrls as $sourceUrl) {
+            if (is_string($sourceUrl)) {
+                $sourceUrls[] = $sourceUrl;
+            }
+        }
     }
 
     $catalogModels = $catalog['models'] ?? null;
@@ -40,7 +54,9 @@ foreach ($catalogs as $catalog) {
 }
 
 return [
+    'version' => $version,
     'as_of' => $asOf,
-    'sources' => $sources,
+    'source_urls' => array_values(array_unique($sourceUrls)),
+    'providers' => $providers,
     'models' => $models,
 ];
